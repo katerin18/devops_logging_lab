@@ -1,0 +1,12 @@
+groups:
+  - name: cpu_alerts
+    rules:
+      - record: instance:cpu_usage:rate5m
+        expr: rate(node_cpu_seconds_total{mode!="idle"}[5m])
+      - alert: HighCPUUsage
+        expr: instance:cpu_usage:rate5m > 0.8
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Высокая загрузка CPU {{ $labels.instance }}"
